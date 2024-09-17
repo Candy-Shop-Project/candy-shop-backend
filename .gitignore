@@ -1,0 +1,78 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environment
+venv/
+env/
+
+# Django related
+*.log
+# Ignore the default SQLite database file
+db.sqlite3         
+# Ignore gettext translation template files  
+*.pot   
+# Ignore compiled Python files             
+*.pyc               
+__pycache__/
+# Ignore media files if they're dynamically uploaded
+media/        
+# Ignore Django's collected static files       
+staticfiles/    
+# Ignore any local settings files    
+local_settings.py
+
+#Config file in candyShop
+settings.py
+
+# Environment variables
+.env           
+
+# Windows specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDE and editor specific files
+.vscode/
+.idea/
+
+# Deployment packages
+*.zip
+*.tar.gz
+
+# Python specific
+*.egg-info/
+*.eggs
+*.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Test and coverage reports
+htmlcov/
+.tox/
+noxfile.py
+.mypy_cache/
+.pyre/
+.pytype/
+cython_debug/
+
+# Flask specific
+instance/
+.web
+
+# Pycharm specific
+.idea/
+*.iml
+
+# VSCode specific
+.vscode/
