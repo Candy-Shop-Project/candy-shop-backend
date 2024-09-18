@@ -42,3 +42,26 @@ def delete_product(request, product_id):
         return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND) # if no row with such id found
     except Exception as e:
         return Response({"error" : str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) # other server error
+
+# view to handle UPDATE requests for updating specific product with id
+@api_view(['PATCH'])
+@permission_classes([AllowAny])
+def update_product(request, product_id):
+    try:
+        # retirve product from the database
+        product = Product.objects.get(id=product_id)
+
+        # pass product and incoming data from request to serializer, also allow partial updates
+        serializer = ProductSerializer(product, data=request.data, partial=True)
+
+
+        if serializer.is_valid():
+            serializer.save() # save only fields which were updated
+            return Response(serializer.data, status=status.HTTP_200_OK) # returns updates product data
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) # return if error occurs
+
+    except Product.DoesNotExist:
+        return Response({"error" : "Product not found"}, status=status.HTTP_404_NOT_FOUND) # 404 if product by id not found
+
+    except Exception as e:
+        return Response({"error" : str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) # if other than 404 error occurs
