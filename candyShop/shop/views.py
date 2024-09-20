@@ -2,19 +2,45 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Product
-from .serializers import ProductSerializer
+from .models import Product, Category
+from .serializers import ProductSerializer, CategorySerializer
 
-# get products for main page
+# get products for main page, filter logic included
 @api_view(['GET'])
 @permission_classes([AllowAny])  # allow anyone to access this view
 def product_list(request):
     try:
-        products = Product.objects.all()  # query all products from heroku db
-        serializer = ProductSerializer(products, many=True)  # serialize queryset
-        return Response(serializer.data)  # JSON response
+        category_name = request.GET.get('category')  # get category (if available) from query parameter
+
+        # if category exist
+        if category_name:
+            category = Category.objects.get(name=category_name)
+            products = Product.objects.filter(category=category)  # filter products by category
+        else:
+            products = Product.objects.all()  # query all products if no category is specified
+
+        serializer = ProductSerializer(products, many=True)  # serialize the queryset
+        return Response(serializer.data)  # return the serialized data as JSON response to frontend
+    
+    # if specified category doesnt exist
+    except Category.DoesNotExist:
+        return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    # other error handling
     except Exception as e:
-        return Response({"error": str(e)}, status=500)
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+# create new category for product
+# View to handle POST requests for creating a new category
+@api_view(['POST'])
+@permission_classes([AllowAny])  # allows anyone to access this view (change later)
+def add_category(request):
+    serializer = CategorySerializer(data=request.data)  # deserialize the incoming data
+
+    if serializer.is_valid():  # check if data is valid
+        serializer.save()  # save the category to database
+        return Response(serializer.data, status=status.HTTP_201_CREATED)  # return created category data
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # return validation errors
 
 
 # view to handle POST requests for creating a new product
