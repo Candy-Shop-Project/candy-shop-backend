@@ -91,3 +91,23 @@ def update_product(request, product_id):
 
     except Exception as e:
         return Response({"error" : str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) # if other than 404 error occurs
+
+
+# view to handle fetch from shop database for specific product with unique id (request from frontend)
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def individual_product(request, product_id):
+    try:
+        product = Product.objects.get(id=product_id) # retrive product from db
+        
+        serializer = ProductSerializer(product) # serialize to send to client
+        
+        return Response(serializer.data, status=status.HTTP_200_OK) # return serialized data
+    
+    except Product.DoesNotExist:
+        return Response({"error": "Product not found"}, status=status.HTTP_404_NOT_FOUND) # as previously used (404)
+    
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) # same for 500
+
+
