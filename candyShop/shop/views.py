@@ -110,4 +110,28 @@ def individual_product(request, product_id):
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) # same for 500
 
+# searchbar view
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def search_product(request):
+    try:
+        # get search query parameter
+        search_query = request.GET.get('search_product', '')
+
+        # if search query is provided, filter products by name using not case sensetive
+        if search_query:
+            products = Product.objects.filter(name__icontains=search_query)  # if partial match
+        else:
+            products = Product.objects.none()  # if no query provided, return empty queryset
+
+        # if no products found
+        if not products.exists():
+            return Response({"message": "No products found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
