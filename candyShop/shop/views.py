@@ -134,4 +134,48 @@ def search_product(request):
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+# retrive products by their ids (for cart frontend fetch). Pass ids in request body {"id" : [103, 105, 184 etc...]}
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def get_multiple_products(request):
+    try:
+        ids_list = request.data.get('ids', [])
+        if not isinstance(ids_list, list) or not ids_list:
+            return Response(
+                {"error": "'ids' must be a non-empty list."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
+        # limit number of input ids to prevent abuse
+        MAX_IDS = 100
+        if len(ids_list) > MAX_IDS:
+            return Response(
+                {"error": f"Too many IDs provided. Maximum allowed is {MAX_IDS}."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # convert all ids to integers and filter out invalid ones
+        valid_ids = []
+        for id_value in ids_list:
+            try:
+                valid_id = int(id_value)
+                if valid_id > 0:
+                    valid_ids.append(valid_id)
+            except (ValueError, TypeError):
+                continue  # skip invalid ids
+
+        if not valid_ids:
+            return Response(
+                {"error": "No valid IDs provided."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        products = Product.objects.filter(id__in=valid_ids)
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        # log the exception internally
+        return Response(
+            {"error": "An internal server error occurred."},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
