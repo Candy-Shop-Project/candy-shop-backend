@@ -27,7 +27,7 @@ staticfiles/
 local_settings.py
 
 #Config file in candyShop
-settings.py
+# settings.py
 
 # Environment variables
 .env           
