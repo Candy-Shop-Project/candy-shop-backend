@@ -172,6 +172,4 @@ DJOSER = {
 }
 
 
-CORS_ALLOWED_ORIGINS = [
-    "https://seahorse-app-fjmlu.ondigitalocean.app/",
-]
+CORS_ALLOWED_ORIGINS = True # for dev purposes
