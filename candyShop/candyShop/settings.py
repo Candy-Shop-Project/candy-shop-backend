@@ -36,7 +36,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['seahorse-app-fjmlu.ondigitalocean.app', 'localhost', '127.0.0.1']
 
@@ -172,4 +172,4 @@ DJOSER = {
 }
 
 
-CORS_ALLOWED_ORIGINS = True # for dev purposes
+CORS_ALLOW_ALL_ORIGINS = True # for dev purposes
