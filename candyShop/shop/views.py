@@ -191,32 +191,3 @@ def get_multiple_products(request):
             {"error": "An internal server error occurred."},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
-        
-
-#stripe view for payment intent logic here
-stripe.api_key = env('STRIPE_SECRET_KEY') # taken from .env
-
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def create_payment_intent(request):
-    try:
-        # get amount from the request data (amount should be in cents)
-        data = json.loads(request.body)
-        amount = data.get('amount')  # expect amount in the frontend payload
-
-        if not amount:
-            return Response({"error": "Amount is required"}, status=status.HTTP_400_BAD_REQUEST)
-
-        # create a PaymentIntent with the amount
-        intent = stripe.PaymentIntent.create(
-            amount=amount,
-            currency='usd',  # currency you are using
-            automatic_payment_methods={"enabled": True},
-        )
-
-        # return the client_secret to frontend
-        return JsonResponse({
-            'client_secret': intent.client_secret
-        })
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
