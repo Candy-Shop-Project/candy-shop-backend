@@ -4,8 +4,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Product, Category
 from .serializers import ProductSerializer, CategorySerializer
-# stripe integration
-import stripe
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
