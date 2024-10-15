@@ -173,3 +173,4 @@ DJOSER = {
 
 
 CORS_ALLOW_ALL_ORIGINS = True # for dev purposes
+CORS_ALLOW_CREDENTIALS = True

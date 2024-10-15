@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Product, Category
@@ -43,7 +43,7 @@ def product_list(request):
 # create new category for product
 # View to handle POST requests for creating a new category
 @api_view(['POST'])
-@permission_classes([AllowAny])  # allows anyone to access this view (change later)
+@permission_classes([IsAuthenticated])  # allows anyone to access this view (change later)
 def add_category(request):
     serializer = CategorySerializer(data=request.data)  # deserialize the incoming data
 
@@ -55,7 +55,7 @@ def add_category(request):
 
 # view to handle POST requests for creating a new product
 @api_view(['POST'])
-@permission_classes([AllowAny])  # allows anyone to access this view(change later)
+@permission_classes([IsAuthenticated])  # allows anyone to access this view(change later)
 def add_product(request):
     if request.method == 'POST':
         serializer = ProductSerializer(data=request.data)  # deserialize data
@@ -67,7 +67,7 @@ def add_product(request):
 
 # view to handle DELETE requests for deleting a product
 @api_view(['DELETE'])
-@permission_classes([AllowAny]) # change later
+@permission_classes([IsAuthenticated]) # change later
 def delete_product(request, product_id):
     try:
         # try to retrive data from db by id provided with request
@@ -81,7 +81,7 @@ def delete_product(request, product_id):
 
 # view to handle UPDATE requests for updating specific product with id
 @api_view(['PATCH'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def update_product(request, product_id):
     try:
         # retirve product from the database
