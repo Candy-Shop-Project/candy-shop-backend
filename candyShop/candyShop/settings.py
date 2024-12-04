@@ -38,7 +38,7 @@ SECRET_KEY = env('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['seahorse-app-fjmlu.ondigitalocean.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['urchin-app-pk38b.ondigitalocean.app', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -166,7 +166,7 @@ DJOSER = {
         'user': 'djoser.serializers.UserSerializer',
     },
     'PERMISSIONS': {
-        'user_create': ['rest_framework.permissions.AllowAny'],  # Registration open to anyone
+        'user_create': ['rest_framework.permissions.IsAuthenticated'],  # only logged in admins can create new users
         'user': ['rest_framework.permissions.IsAuthenticated'],
     },
 }
